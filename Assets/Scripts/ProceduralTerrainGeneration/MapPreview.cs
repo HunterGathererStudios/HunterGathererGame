@@ -9,12 +9,11 @@ public class MapPreview : MonoBehaviour {
 	public MeshRenderer meshRenderer;
 
 
-	public enum DrawMode {NoiseMap, Mesh, FalloffMap, Biomes, BiomeMesh, BiomeMapHeightMult};
+	public enum DrawMode {NoiseMap, Mesh, Biomes, BiomeMesh, BiomeMapHeightMult};
 	public DrawMode drawMode;
 
 	public MeshSettings meshSettings;
 	public HeightMapSettings heightMapSettings;
-	public TextureData textureData;
 	public BiomeMapSettings biomeMapSettings;
 
 	public Material terrainMaterial;
@@ -29,21 +28,13 @@ public class MapPreview : MonoBehaviour {
 
 
 	public void DrawMapInEditor() {
-		textureData.ApplyToMaterial (terrainMaterial);
-		textureData.UpdateMeshHeights (terrainMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
 		HeightMap heightMap = HeightMapGenerator.GenerateHeightMap (meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, heightMapSettings, Vector2.zero);
 		HeightMap biomeHeightMap = HeightMapGenerator.GenerateHeightMap(meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, heightMapSettings, Vector2.zero, biomeMapSettings);
 		BiomeMap biomeMap = BiomeMapGenerator.GenerateBiomeMap (meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, biomeMapSettings, Vector2.zero);
 		if (drawMode == DrawMode.NoiseMap) {
 			DrawTexture (TextureGenerator.TextureFromHeightMap (heightMap));
-		} else if (drawMode == DrawMode.Mesh) {
-			DrawMesh (MeshGenerator.GenerateTerrainMesh (heightMap.values,meshSettings, editorPreviewLOD));
-		} else if (drawMode == DrawMode.FalloffMap) {
-			DrawTexture(TextureGenerator.TextureFromHeightMap(new HeightMap(FalloffGenerator.GenerateFalloffMap(meshSettings.numVertsPerLine),0,1)));
 		} else if (drawMode == DrawMode.Biomes) {
 			DrawTexture(TextureGenerator.TextureFromBiomeMap(biomeMap));
-		} else if (drawMode == DrawMode.BiomeMesh) {
-			DrawMesh(MeshGenerator.GenerateTerrainMesh(biomeHeightMap.values,meshSettings,editorPreviewLOD));
 		} else if (drawMode == DrawMode.BiomeMapHeightMult) {
 			DrawTexture(TextureGenerator.TextureFromBiomeHeightMult(biomeMap));
 		}
@@ -61,23 +52,12 @@ public class MapPreview : MonoBehaviour {
 		meshFilter.gameObject.SetActive (false);
 	}
 
-	public void DrawMesh(MeshData meshData) {
-		meshFilter.sharedMesh = meshData.CreateMesh ();
-
-		textureRender.gameObject.SetActive (false);
-		meshFilter.gameObject.SetActive (true);
-	}
-
 
 
 	void OnValuesUpdated() {
 		if (!Application.isPlaying) {
 			DrawMapInEditor ();
 		}
-	}
-
-	void OnTextureValuesUpdated() {
-		textureData.ApplyToMaterial (terrainMaterial);
 	}
 
 	void OnValidate() {
@@ -89,10 +69,6 @@ public class MapPreview : MonoBehaviour {
 		if (heightMapSettings != null) {
 			heightMapSettings.OnValuesUpdated -= OnValuesUpdated;
 			heightMapSettings.OnValuesUpdated += OnValuesUpdated;
-		}
-		if (textureData != null) {
-			textureData.OnValuesUpdated -= OnTextureValuesUpdated;
-			textureData.OnValuesUpdated += OnTextureValuesUpdated;
 		}
 		if (biomeMapSettings!= null) {
 			biomeMapSettings.OnValuesUpdated -= OnValuesUpdated;

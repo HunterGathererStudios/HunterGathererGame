@@ -16,7 +16,6 @@ namespace ProceduralTerrainGeneration
 
 		public MeshSettings meshSettings;
 		public HeightMapSettings heightMapSettings;
-		public TextureData textureSettings;
 		public BiomeMapSettings biomeMapSettings;
 
 		public Transform viewer;
@@ -33,9 +32,6 @@ namespace ProceduralTerrainGeneration
 
 		void Start() {
 
-			textureSettings.ApplyToMaterial (mapMaterial);
-			textureSettings.UpdateMeshHeights (mapMaterial, heightMapSettings.minHeight, heightMapSettings.maxHeight);
-
 			float maxViewDst = detailLevels [detailLevels.Length - 1].visibleDstThreshold;
 			meshWorldSize = meshSettings.meshWorldSize;
 			chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
@@ -48,7 +44,7 @@ namespace ProceduralTerrainGeneration
 
 			if (viewerPosition != viewerPositionOld) {
 				foreach (TerrainChunk chunk in visibleTerrainChunks) {
-					chunk.UpdateCollisionMesh ();
+					//chunk.UpdateCollisionMesh ();
 				}
 			}
 
@@ -75,7 +71,7 @@ namespace ProceduralTerrainGeneration
 						if (terrainChunkDictionary.ContainsKey (viewedChunkCoord)) {
 							terrainChunkDictionary [viewedChunkCoord].UpdateTerrainChunk ();
 						} else {
-							TerrainChunk newChunk = new TerrainChunk (viewedChunkCoord,heightMapSettings,meshSettings, detailLevels, colliderLODIndex, transform, viewer, mapMaterial);
+							TerrainChunk newChunk = new TerrainChunk (viewedChunkCoord,heightMapSettings,meshSettings, detailLevels, colliderLODIndex, transform, viewer);
 							terrainChunkDictionary.Add (viewedChunkCoord, newChunk);
 							newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
 							newChunk.Load (useBiomes, biomeMapSettings);

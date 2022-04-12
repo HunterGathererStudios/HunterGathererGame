@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using ProceduralTerrainGeneration;
 using UnityEngine;
 
@@ -26,5 +24,5 @@ public class Biome {
     public float startValue;
     public float heightMult = 1;
     public AnimationCurve heightCurve;
-    public TextureData biomeTextures;
+    public Material material;
 }
