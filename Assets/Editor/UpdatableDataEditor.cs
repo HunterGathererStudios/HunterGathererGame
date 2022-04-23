@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using ProceduralTerrainGeneration.Data;
 using UnityEditor;
 
 [CustomEditor (typeof(UpdatableData), true)]

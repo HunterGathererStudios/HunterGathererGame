@@ -13,139 +13,29 @@ MonoBehaviour:
   m_Name: Default Biome Map
   m_EditorClassIdentifier: 
   autoUpdate: 1
-  noiseSettings:
+  temperatureSettings:
     normalizeMode: 1
-    scale: 1000
+    scale: 50
     octaves: 6
-    persistance: 0.054
-    lacunarity: 1.86
-    seed: 391
+    persistance: 0.325
+    lacunarity: 2.5
+    seed: 1
+    offset: {x: -4.18, y: 1}
+    maxAndMinValues: {x: 50, y: -10}
+  precipitationSettings:
+    normalizeMode: 1
+    scale: 50
+    octaves: 6
+    persistance: 0.288
+    lacunarity: 3.5
+    seed: 0
     offset: {x: 0, y: 0}
-  smoothingRadius: 5
+    maxAndMinValues: {x: 100, y: 0}
+  smoothingRadius: 6
   Biomes:
-  - startValue: 0.33
-    heightMult: 2.62
-    heightCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: -0.004165394
-        value: 0.20518638
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.3369733
-        value: 0.33333325
-        inSlope: 0.7075298
-        outSlope: 0.7075298
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.60344565
-        value: 0.5668752
-        inSlope: 1.5897658
-        outSlope: 1.5897658
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.17889826
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    biomeTextures: {fileID: 11400000, guid: 327ca20be43490a4e87bea5aa4258bc3, type: 2}
-  - startValue: 0.74
-    heightMult: 1.5
-    heightCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.13633674
-        value: 0.07999098
-        inSlope: 0.32762846
-        outSlope: 0.32762846
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.17669831
-      - serializedVersion: 3
-        time: 0.8059517
-        value: 0.23704588
-        inSlope: 0.039078284
-        outSlope: 0.039078284
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.25982827
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0.15509905
-        outSlope: 0.15509905
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.10537953
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    biomeTextures: {fileID: 0}
-  - startValue: 1
-    heightMult: 1
-    heightCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 0.8476471
-        value: 0.17117068
-        inSlope: 0.669938
-        outSlope: 0.669938
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.38680148
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 2
-        outSlope: 2
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    biomeTextures: {fileID: 0}
+  - {fileID: 11400000, guid: 3350b447629fe824aada2131977d3887, type: 2}
+  - {fileID: 11400000, guid: 6f43d655a4876764086180406ca8f82e, type: 2}
+  - {fileID: 11400000, guid: efb2c54ee426c0b49982f138b99da5f9, type: 2}
+  - {fileID: 11400000, guid: fc4db747e09f37b40b0813f3a7482637, type: 2}
+  - {fileID: 11400000, guid: 85b7595644fee04409331dc47b0db9ea, type: 2}
+  oceanHeight: 0.198

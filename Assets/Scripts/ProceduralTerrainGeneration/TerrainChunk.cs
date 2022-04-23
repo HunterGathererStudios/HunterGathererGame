@@ -1,4 +1,5 @@
 ﻿using ProceduralTerrainGeneration;
+using ProceduralTerrainGeneration.Data;
 using UnityEngine;
 
 public class TerrainChunk {
@@ -21,6 +22,7 @@ public class TerrainChunk {
 
 	HeightMap heightMap;
 	bool heightMapReceived;
+	BiomeMap biomeMap;
 	int previousLODIndex = -1;
 	bool hasSetCollider;
 	float maxViewDst;
@@ -30,12 +32,13 @@ public class TerrainChunk {
 	MeshSettings meshSettings;
 	Transform viewer;
 
-	public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material) {
+	public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, BiomeMapSettings biomeMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material) {
 		this.coord = coord;
 		this.detailLevels = detailLevels;
 		this.colliderLODIndex = colliderLODIndex;
 		this.heightMapSettings = heightMapSettings;
 		this.meshSettings = meshSettings;
+		this.biomeMapSettings = biomeMapSettings;
 		this.viewer = viewer;
 
 		sampleCentre = coord * meshSettings.meshWorldSize / meshSettings.meshScale;
@@ -66,8 +69,7 @@ public class TerrainChunk {
 
 	}
 
-	public void Load(bool useBiomes, BiomeMapSettings biomeMapSettings) {
-		this.biomeMapSettings = biomeMapSettings;
+	public void Load(bool useBiomes) {
 		if (useBiomes) {
 			ThreadedDataRequester.RequestData(() => HeightMapGenerator.GenerateHeightMap (meshSettings.numVertsPerLine, meshSettings.numVertsPerLine, heightMapSettings, sampleCentre, biomeMapSettings), OnHeightMapReceived);
 		} else {
@@ -77,8 +79,10 @@ public class TerrainChunk {
 
 
 
-	void OnHeightMapReceived(object heightMapObject) {
-		this.heightMap = (HeightMap)heightMapObject;
+	void OnHeightMapReceived(object mapContainer) {
+		MapOutputContainer mapOutputContainer = (MapOutputContainer) mapContainer;
+		this.heightMap = mapOutputContainer.heightMap;
+		this.biomeMap = mapOutputContainer.biomeMap;
 		heightMapReceived = true;
 
 		UpdateTerrainChunk ();

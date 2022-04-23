@@ -1,56 +1,59 @@
-using System.Collections;
-using System.Collections.Generic;
-using ProceduralTerrainGeneration;
 using UnityEngine;
 
-[CreateAssetMenu()]
-public class BiomeMapSettings : UpdatableData
-{
-    public NoiseSettings noiseSettings;
-    [Range (0, 10)]
-    public int smoothingRadius;
-    public Biome[] Biomes;
+namespace ProceduralTerrainGeneration.Data {
+    [CreateAssetMenu(menuName = "Terrain Data/Biome Map Settings")]
+    public class BiomeMapSettings : UpdatableData
+    {
+        public TemperatureAndPrecipitationSettings temperatureSettings;
+        public TemperatureAndPrecipitationSettings precipitationSettings;
 
-    public float minHeight {
-        get {
-            float height = float.MaxValue;
-            float bHeight;
-            foreach (var biome in Biomes) {
-                bHeight = biome.heightCurve.Evaluate (0) * biome.heightMult;
-                if (bHeight < height)
-                    height = bHeight;
+        [Range (0, 10)]
+        public int smoothingRadius;
+        public Biome[] Biomes;
+
+        [Range (0, 1)]
+        public float oceanHeight;
+
+        public float minHeight {
+            get {
+                float height = float.MaxValue;
+                float bHeight;
+                foreach (var biome in Biomes) {
+                    bHeight = biome.heightCurve.Evaluate (0) * biome.heightMult;
+                    if (bHeight < height)
+                        height = bHeight;
+                }
+                return height;
             }
-            return height;
         }
-    }
     
-    public float maxHeight {
-        get {
-            float height = float.MinValue;
-            float bHeight;
-            foreach (var biome in Biomes) {
-                bHeight = biome.heightCurve.Evaluate (1) * biome.heightMult;
-                if (bHeight > height)
-                    height = bHeight;
+        public float maxHeight {
+            get {
+                float height = float.MinValue;
+                float bHeight;
+                foreach (var biome in Biomes) {
+                    bHeight = biome.heightCurve.Evaluate (1) * biome.heightMult;
+                    if (bHeight > height)
+                        height = bHeight;
+                }
+                return height;
             }
-            return height;
         }
-    }
-    
+
 #if UNITY_EDITOR
-    protected override void OnValidate() {
-        noiseSettings.ValidateValues ();
-        base.OnValidate ();
-    }
+        protected override void OnValidate() {
+            temperatureSettings.ValidateValues();
+            precipitationSettings.ValidateValues();
+            base.OnValidate ();
+        }
 #endif
     
     
+    }
+    [System.Serializable]
+    public class TemperatureAndPrecipitationSettings : NoiseSettings {
+        public Vector2 maxAndMinValues;
+        //public float valueOffset;
+    }
 }
-[System.Serializable]
-public class Biome {
-    [Range(0,1)]
-    public float startValue;
-    public float heightMult = 1;
-    public AnimationCurve heightCurve;
-    public TextureData biomeTextures;
-}
+

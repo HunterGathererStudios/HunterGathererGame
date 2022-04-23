@@ -1,4 +1,5 @@
 ﻿using System;
+using ProceduralTerrainGeneration.Data;
 using UnityEngine;
 
 namespace General {
