@@ -33,12 +33,6 @@ namespace ProceduralTerrainGeneration
 		List<TerrainChunk> visibleTerrainChunks = new List<TerrainChunk>();
 
 		void Start() {
-			float minHeight = (!useBiomes) ? heightMapSettings.minHeight : biomeMapSettings.minHeight * heightMapSettings.minHeight;
-			float maxHeight = (!useBiomes) ? heightMapSettings.maxHeight : biomeMapSettings.maxHeight * heightMapSettings.maxHeight;
-
-			textureSettings.ApplyToMaterial (mapMaterial); 
-			textureSettings.UpdateMeshHeights (mapMaterial, minHeight, maxHeight);
-
 			float maxViewDst = detailLevels [detailLevels.Length - 1].visibleDstThreshold;
 			meshWorldSize = meshSettings.meshWorldSize;
 			chunksVisibleInViewDst = Mathf.RoundToInt(maxViewDst / meshWorldSize);
@@ -60,6 +54,15 @@ namespace ProceduralTerrainGeneration
 				UpdateVisibleChunks ();
 			}
 		}
+
+		void ApplyToMaterial() {
+			if (mapMaterial.shader.Equals(Shader.Find("Custom/Terrain"))) {
+				textureSettings.ApplyToMaterial(mapMaterial);
+			}
+			float minHeight = (!useBiomes) ? heightMapSettings.minHeight : biomeMapSettings.minHeight * heightMapSettings.minHeight;
+			float maxHeight = (!useBiomes) ? heightMapSettings.maxHeight : biomeMapSettings.maxHeight * heightMapSettings.maxHeight;
+			textureSettings.UpdateMeshHeights(mapMaterial, minHeight, maxHeight);
+		}
 		
 		void UpdateVisibleChunks() {
 			HashSet<Vector2> alreadyUpdatedChunkCoords = new HashSet<Vector2> ();
@@ -78,7 +81,7 @@ namespace ProceduralTerrainGeneration
 						if (terrainChunkDictionary.ContainsKey (viewedChunkCoord)) {
 							terrainChunkDictionary [viewedChunkCoord].UpdateTerrainChunk ();
 						} else {
-							TerrainChunk newChunk = new TerrainChunk (viewedChunkCoord,heightMapSettings, biomeMapSettings ,meshSettings, detailLevels, colliderLODIndex, transform, viewer, mapMaterial);
+							TerrainChunk newChunk = new TerrainChunk (viewedChunkCoord,heightMapSettings, biomeMapSettings ,meshSettings, textureSettings, detailLevels, colliderLODIndex, transform, viewer, mapMaterial);
 							terrainChunkDictionary.Add (viewedChunkCoord, newChunk);
 							newChunk.onVisibilityChanged += OnTerrainChunkVisibilityChanged;
 							newChunk.Load (useBiomes);

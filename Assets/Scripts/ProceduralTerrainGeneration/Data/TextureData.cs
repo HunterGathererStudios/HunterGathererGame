@@ -33,7 +33,6 @@ namespace ProceduralTerrainGeneration.Data {
 			
 			material.SetColorArray("biomeColours", settings.Biomes.Select(x => x.biomeColour).ToArray());
 			material.SetInt("numBiomes",settings.Biomes.Length);
-		
 			int size = map.biomeMapIndexes.GetLength (0);
 			float worldSize = meshSettings.meshWorldSize;
 			float ratio = worldSize / size;
@@ -42,14 +41,8 @@ namespace ProceduralTerrainGeneration.Data {
 			material.SetFloatArray("biomeOrigin",new []{centre.x - worldSize/2, centre.z - worldSize/2});
 			material.SetInt("mapSize",size);
 
-			ShaderMap[] shaderMap = ShaderMapFromBiomes (map);
-			int bufferSize = ShaderMap.Size ();
-			buffer = new ComputeBuffer (shaderMap.Length, bufferSize);
-			if (Application.isEditor) {
-				GC.SuppressFinalize(buffer);
-			}
-			buffer.SetData(shaderMap);
-			material.SetBuffer("biomeMap",buffer);
+			Texture2D biomeMapTexture = TextureFromBiomes(map);
+			material.SetTexture("biomeMap", biomeMapTexture);
 
 			UpdateMeshHeights (material, savedMinHeight, savedMaxHeight);
 		}
@@ -71,17 +64,9 @@ namespace ProceduralTerrainGeneration.Data {
 			return textureArray;
 		}
 
-		private ShaderMap[] ShaderMapFromBiomes(BiomeMap biomeMap) {
-			int width = biomeMap.biomeMapIndexes.GetLength (0);
-			int height = biomeMap.biomeMapIndexes.GetLength (1);
-		
-			ShaderMap[] map = new ShaderMap[width * height];
-			for (int j = 0; j < height; j++) {
-				for (int i = 0; i < width; i++) {
-					map[j * width + i] = new ShaderMap(biomeMap.biomeMapIndexes [i, j]);
-				}
-			}
-			return map;
+		private Texture2D TextureFromBiomes(BiomeMap biomeMap) {
+			return TextureGenerator.TextureFromIntMap(biomeMap.biomeMapIndexes, 0, biomeMap.numBiomes, Color.black,
+				Color.yellow);
 		}
 	
 		public struct ShaderMap {

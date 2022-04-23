@@ -23,14 +23,7 @@
 		float3 biomeColours[maxNumBiomes];
 		float2 biomeOrigin;
 
-		struct BiomeMap {
-			int index;
-		};
-
-
-		#ifdef SHADER_API_D3D11
-		StructuredBuffer<BiomeMap> biomeMap;
-		#endif
+		UNITY_DECLARE_TEX2D(biomeMap);
 		
 		float worldSizeRatio;
 
@@ -49,11 +42,9 @@
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			int biomeX = round((IN.worldPos.x - biomeOrigin.x) / worldSizeRatio);
 			int biomeY = round((IN.worldPos.z - biomeOrigin.y) / worldSizeRatio);
-			
-			#ifdef SHADER_API_D3D11
-				int biome = biomeMap[biomeY * mapSize + biomeX].index;
-				o.Albedo = biomeColours[biome].rgb;
-			#endif
+			float2 uv = (biomeX, biomeY);
+			float4 biomeColour = UNITY_SAMPLE_TEX2D(biomeMap, uv);
+			o.Albedo = biomeColour;
 
 			//o.Albedo = o.Albedo * float3 (IN.worldPos.x, IN.worldPos.y, IN.worldPos.z); 
 		}

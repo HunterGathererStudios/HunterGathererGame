@@ -30,15 +30,17 @@ public class TerrainChunk {
 	BiomeMapSettings biomeMapSettings;
 	HeightMapSettings heightMapSettings;
 	MeshSettings meshSettings;
+	private TextureData textureSettings;
 	Transform viewer;
 
-	public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, BiomeMapSettings biomeMapSettings, MeshSettings meshSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material) {
+	public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, BiomeMapSettings biomeMapSettings, MeshSettings meshSettings, TextureData textureSettings, LODInfo[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material) {
 		this.coord = coord;
 		this.detailLevels = detailLevels;
 		this.colliderLODIndex = colliderLODIndex;
 		this.heightMapSettings = heightMapSettings;
 		this.meshSettings = meshSettings;
 		this.biomeMapSettings = biomeMapSettings;
+		this.textureSettings = textureSettings;
 		this.viewer = viewer;
 
 		sampleCentre = coord * meshSettings.meshWorldSize / meshSettings.meshScale;
@@ -81,10 +83,12 @@ public class TerrainChunk {
 
 	void OnHeightMapReceived(object mapContainer) {
 		MapOutputContainer mapOutputContainer = (MapOutputContainer) mapContainer;
-		this.heightMap = mapOutputContainer.heightMap;
-		this.biomeMap = mapOutputContainer.biomeMap;
+		heightMap = mapOutputContainer.heightMap;
+		biomeMap = mapOutputContainer.biomeMap;
 		heightMapReceived = true;
-
+		if (meshRenderer.material.shader.Equals (Shader.Find ("Custom/BiomeTerrain"))) {
+			textureSettings.ApplyToBiomeMaterial (meshRenderer.material, biomeMapSettings, meshSettings, biomeMap, new Vector3 (sampleCentre.x, 0, sampleCentre.y));
+		}
 		UpdateTerrainChunk ();
 	}
 
